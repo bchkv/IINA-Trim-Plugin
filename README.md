@@ -2,7 +2,7 @@
 
 Install ffmpeg: 'brew install ffmpeg'
 
-IINA —> Plugin —> Manage Plugins —> Install from GitHub... —> Enter "https://github.com/bchkv/IINA-Clip-Export" —> Accept permissions
+IINA —> Plugin —> Manage Plugins —> Install from GitHub... —> Enter "https://github.com/bchkv/IINA-Trim-Plugin" —> Accept permissions
 
 
 ## Usage
