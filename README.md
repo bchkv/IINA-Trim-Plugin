@@ -8,3 +8,5 @@ IINA —> Plugin —> Manage Plugins —> Install from GitHub... —> Enter "htt
 ## Usage
 
 Use OPTION + S shortcut to mark both the starting and the ending point. The clip is saved to the same path.
+
+Note — it's a very minimal functional implemetation so far.
