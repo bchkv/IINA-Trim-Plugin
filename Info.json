@@ -1,15 +1,17 @@
 {
   "name": "Clip Export",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "com.bchkv.clip-export",
   "author": {
-        "name": "Daniil Bochkovoy",
-        "url": "https://github.com/bchkv"
+    "name": "Daniil Bochkovoy",
+    "url": "https://github.com/bchkv"
   },
   "entry": "main.js",
-  "description": "Mark start/end with OPTION + S and export a video segment",
+  "description": "Mark start/end with Option+S and export a video segment",
   "permissions": [
     "video-overlay",
-    "file-system"   
-  ]
+    "file-system"
+  ],
+  "ghRepo": "bchkv/IINA-Trim-Plugin",
+  "ghVersion": 2
 }
