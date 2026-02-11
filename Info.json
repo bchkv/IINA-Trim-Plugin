@@ -1,6 +1,6 @@
 {
   "name": "Clip Export",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "identifier": "com.bchkv.clip-export",
   "author": {
     "name": "Daniil Bochkovoy",
@@ -13,5 +13,5 @@
     "file-system"
   ],
   "ghRepo": "bchkv/IINA-Trim-Plugin",
-  "ghVersion": 2
+  "ghVersion": 3
 }
