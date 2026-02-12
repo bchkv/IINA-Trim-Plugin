@@ -1,6 +1,6 @@
 {
   "name": "Clip Export",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "identifier": "com.bchkv.clip-export",
   "author": {
     "name": "Daniil Bochkovoy",
@@ -12,6 +12,12 @@
     "video-overlay",
     "file-system"
   ],
+  "preferencesPage": "settings.html",
+  "preferenceDefaults": {
+    "copyToClipboard": true,
+    "useCustomDir": false,
+    "customDir": ""
+  },
   "ghRepo": "bchkv/IINA-Trim-Plugin",
-  "ghVersion": 4
+  "ghVersion": 6
 }

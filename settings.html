@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  body{
+    font: 13px -apple-system, BlinkMacSystemFont, sans-serif;
+    padding: 18px;
+  }
+  .section{ margin-bottom: 18px; }
+  .row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:10px;
+  }
+  fieldset{
+    border: 1px solid rgba(60,60,67,0.18);
+    border-radius: 12px;
+    padding: 14px;
+    margin: 0;
+  }
+  legend{
+    padding: 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  @media (prefers-color-scheme: light) {
+    legend{ color: rgba(60,60,67,0.75); }
+  }
+  @media (prefers-color-scheme: dark) {
+    legend{ color: rgba(235,235,245,0.70); }
+  }
+  .hint{
+    font-size: 12px;
+    line-height: 1.4;
+    margin-top: 6px;
+  }
+  @media (prefers-color-scheme: light) {
+    .hint{ color: rgba(60,60,67,0.75); }
+  }
+  @media (prefers-color-scheme: dark) {
+    .hint{ color: rgba(235,235,245,0.70); }
+  }
+  .suboption{
+    margin-left: 26px;
+    margin-top: 6px;
+  }
+  input[type="text"]{
+    width: 100%;
+    max-width: 520px;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="section">
+  <label class="row" style="align-items:center">
+    <input type="checkbox" data-type="bool" data-pref-key="copyToClipboard" id="copyToClipboard">
+    <span>Copy exported clip to clipboard</span>
+  </label>
+</div>
+
+<!--
+<div class="section">
+  <fieldset>
+    <legend>Export Type (template)</legend>
+
+    <div class="row">
+      <input type="radio" name="exportMode" id="mode_streamcopy" value="streamcopy">
+      <div>
+        <label for="mode_streamcopy"><strong>Fast (no re-encoding)</strong></label>
+        <div class="hint">
+          Instant export. Keeps the original video format.<br>
+          May cut slightly off keyframes.
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <input type="radio" name="exportMode" id="mode_mp4" value="mp4">
+      <div>
+        <label for="mode_mp4"><strong>High Compatibility (MP4)</strong></label>
+        <div class="hint">
+          Re-encodes the clip to MP4.<br>
+          More accurate and widely compatible.
+        </div>
+      </div>
+    </div>
+
+  </fieldset>
+</div>
+-->
+
+<div class="section">
+  <label class="row" style="align-items:center">
+    <input type="checkbox" data-type="bool" data-pref-key="useCustomDir" id="useCustomDir">
+    <span>Save clips to a custom folder</span>
+  </label>
+
+  <div class="suboption">
+    <div class="hint">Examples: <code>~/Downloads</code> or <code>~/Movies/Clips</code></div>
+    <input type="text" data-pref-key="customDir" id="customDir" placeholder="Same folder as the source video">
+  </div>
+</div>
+
+<script>
+  function syncUI() {
+    const use = document.getElementById("useCustomDir").checked;
+    document.getElementById("customDir").disabled = !use;
+  }
+
+  document.getElementById("useCustomDir").addEventListener("change", syncUI);
+  setTimeout(syncUI, 30);
+</script>
+
+</body>
+</html>
