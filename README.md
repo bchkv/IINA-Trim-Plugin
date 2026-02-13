@@ -1,6 +1,6 @@
 # README
 
-Extract fragments from videos. Equivalent to QuickTime Trim or VLC Record functionalities.
+Extract clips from videos. Equivalent to QuickTime Trim or VLC Record functionality.
 
 ## Installation
 
@@ -10,4 +10,4 @@ IINA —> Plugin —> Manage Plugins —> Install from GitHub... —> Enter "htt
 
 ## Usage
 
-OPTION + S to mark both the starting and the ending point. Some settings are available in the menu.
+Mark the start and end points OPTION + S. Some settings are  available in the menu.
