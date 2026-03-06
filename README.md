@@ -6,11 +6,17 @@ Extract clips from videos. Functionally equivalent to QuickTime Trim or VLC Reco
 
 ### 1. Install ffmpeg 
 
-brew install ffmpeg'
+`brew install ffmpeg`
 
 ### 2. Install the plugin
 
-IINA —> Plugin —> Manage Plugins —> Install from GitHub... —> Enter "https://github.com/bchkv/IINA-Trim-Plugin" —> Accept permissions
+Open **IINA → Plugin → Manage Plugins → Install from GitHub...**
+
+Enter:
+
+`https://github.com/bchkv/IINA-Trim-Plugin`
+
+Then accept permissions.
 
 ## Usage
 
