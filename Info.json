@@ -15,6 +15,7 @@
   "preferencesPage": "settings.html",
   "preferenceDefaults": {
     "copyToClipboard": true,
+    "clipboardOnly": false,
     "useCustomDir": false,
     "customDir": ""
   },

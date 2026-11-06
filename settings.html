@@ -46,6 +46,10 @@
     margin-left: 26px;
     margin-top: 6px;
   }
+  body:not(:has(#copyToClipboard:checked)) #clipboardOptions,
+  body:has(#copyToClipboard:checked):has(#clipboardOnly:checked) #folderOptions{
+    display: none;
+  }
   input[type="text"]{
     width: 100%;
     max-width: 520px;
@@ -60,6 +64,13 @@
     <input type="checkbox" data-type="bool" data-pref-key="copyToClipboard" id="copyToClipboard">
     <span>Copy exported clip to clipboard</span>
   </label>
+  <div class="suboption" id="clipboardOptions">
+    <label class="row" style="align-items:center">
+      <input type="checkbox" data-type="bool" data-pref-key="clipboardOnly" id="clipboardOnly">
+      <span>Copy to clipboard only</span>
+    </label>
+    <div class="hint">Uses a temporary file so the clip can be pasted into other apps.</div>
+  </div>
 </div>
 
 <!--
@@ -93,7 +104,7 @@
 </div>
 -->
 
-<div class="section">
+<div class="section" id="folderOptions">
   <label class="row" style="align-items:center">
     <input type="checkbox" data-type="bool" data-pref-key="useCustomDir" id="useCustomDir">
     <span>Save clips to a custom folder</span>

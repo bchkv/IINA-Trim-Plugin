@@ -2,6 +2,7 @@
 const { input, mpv, overlay, utils, preferences } = iina;
 
 let start = null;
+let exporting = false;
 
 /* ---------- UI ---------- */
 
@@ -153,7 +154,7 @@ async function copyFileToClipboard(posixPath) {
     "-e", "set pb to current application's NSPasteboard's generalPasteboard()",
     "-e", "pb's clearContents()",
     "-e", "set fileURL to current application's NSURL's fileURLWithPath:thePath",
-    "-e", "pb's writeObjects:{fileURL}",
+    "-e", 'if not ((pb\'s writeObjects:{fileURL}) as boolean) then error "Could not copy the clip"',
   ]);
   if (status !== 0) throw new Error(stderr || `osascript exit ${status}`);
 }
@@ -181,6 +182,8 @@ async function ensureDirExists(dir) {
 /* ---------- Main ---------- */
 
 input.onKeyDown("Alt+s", async () => {
+  if (exporting) return true;
+
   if (start === null) {
     start = Math.max(0, mpv.getNumber("time-pos"));
     notify("Start set", formatHMS(start), false, 2600);
@@ -200,20 +203,6 @@ input.onKeyDown("Alt+s", async () => {
   const base = sanitizeBase(filename);
   const inputExt = extFromFilename(filename);
 
-  // ✅ settings we keep
-  const copyToClipboardPref = await prefBool("copyToClipboard", true);
-  const useCustomDir = await prefBool("useCustomDir", false);
-  const customDirRaw = await prefStr("customDir", "");
-
-  let outDir = sourceDir;
-  try {
-    if (useCustomDir && customDirRaw.trim()) outDir = await expandPathTemplate(customDirRaw);
-  } catch (_) {
-    outDir = sourceDir;
-  }
-
-  const outPath = `${outDir}/${base}_${formatHMS(start)}_to_${formatHMS(end)}.${inputExt}`;
-
   const ffmpeg = findFfmpeg();
   if (!ffmpeg) {
     notify("ffmpeg not found", "Install with Homebrew", true, 5000);
@@ -221,8 +210,33 @@ input.onKeyDown("Alt+s", async () => {
     return true;
   }
 
+  exporting = true;
+  let tempDir = "";
+  let outPath = "";
+  let copied = false;
   try {
-    await ensureDirExists(outDir);
+    const copyToClipboard = await prefBool("copyToClipboard", true);
+    const clipboardOnly = copyToClipboard && await prefBool("clipboardOnly", false);
+
+    let outDir = sourceDir;
+    if (clipboardOnly) {
+      const { status, stdout, stderr } = await utils.exec("/usr/bin/mktemp", [
+        "-d", "/tmp/iina-clip-export.XXXXXXXX",
+      ]);
+      if (status !== 0 || !stdout?.trim()) throw new Error(stderr || "Could not create a temporary folder");
+      tempDir = outDir = stdout.trim();
+    } else {
+      if (await prefBool("useCustomDir", false)) {
+        const customDir = await prefStr("customDir", "");
+        try {
+          if (customDir.trim()) outDir = await expandPathTemplate(customDir);
+        } catch (_) {
+          outDir = sourceDir;
+        }
+      }
+      await ensureDirExists(outDir);
+    }
+    outPath = `${outDir}/${base}_${formatHMS(start)}_to_${formatHMS(end)}.${inputExt}`;
 
     // ✅ stream copy only
     const args = [
@@ -239,9 +253,15 @@ input.onKeyDown("Alt+s", async () => {
     const { status, stderr } = await utils.exec(ffmpeg, args);
 
     if (status === 0) {
-      if (copyToClipboardPref) {
-        try { await copyFileToClipboard(outPath); } catch (_) {}
-        notify("Saved & copied", outPath, false, 5200);
+      if (copyToClipboard) {
+        try {
+          await copyFileToClipboard(outPath);
+          copied = true;
+          notify(clipboardOnly ? "Copied to clipboard" : "Saved & copied", clipboardOnly ? "" : outPath, false, 5200);
+        } catch (error) {
+          notify(clipboardOnly ? "Copy failed" : "Saved, but copy failed",
+            clipboardOnly ? String(error) : outPath, true, 6500);
+        }
       } else {
         notify("Saved", outPath, false, 5200);
       }
@@ -251,7 +271,15 @@ input.onKeyDown("Alt+s", async () => {
   } catch (e) {
     notify("Execution error", String(e), true, 6500);
   } finally {
+    // The pasteboard holds a file URL, so successful copies must survive for pasting.
+    if (tempDir && !copied) {
+      try {
+        if (outPath) await utils.exec("/bin/rm", ["-f", outPath]);
+        await utils.exec("/bin/rmdir", [tempDir]);
+      } catch (_) {}
+    }
     start = null;
+    exporting = false;
   }
 
   return true;
